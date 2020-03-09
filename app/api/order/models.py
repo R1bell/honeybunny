@@ -5,7 +5,7 @@ from .namespace import ORDER_NAMESPACE as api
 
 new_order: Model = api.model("new order", {
     "wayOfPaiment": fields.String(required=True),
-    "oddMoney": fields.String(required=True),
+    "oddMoney": fields.String(),
     "address": fields.String(required=True),
     "porch": fields.String(),
     "floor": fields.String(),
