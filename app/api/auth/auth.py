@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt_extended import create_access_token
 from flask_restplus import Resource
 
@@ -23,7 +25,9 @@ class Auth(Resource):
         user_id: int = User(**api.payload).commit.id
         identity: str = api.payload["login"]
         return {
-            "accessToken": create_access_token(identity=identity),
+            "accessToken": create_access_token(
+                identity=identity,
+                expires_delta=datetime.timedelta(days=365)),
             "id": user_id,
             "firstName": api.payload["firstName"],
             "lastName": api.payload["lastName"]
@@ -37,8 +41,9 @@ class Login(Resource):
     @api.doc(responses=get_codes(401))
     def post(self):
         user = User.log_in(**api.payload)
-        print(user)
         return {
             "user": user,
-            "accessToken": create_access_token(identity=api.payload["login"])
+            "accessToken": create_access_token(
+                identity=user.login,
+                expires_delta=datetime.timedelta(days=365))
         } if user else api.abort(401, "Wrong email or password.")

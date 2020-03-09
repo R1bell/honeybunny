@@ -21,9 +21,14 @@ class Order(db.Model):
     lastName = db.Column(db.String(128))
     phone = db.Column(db.String(128))
     email = db.Column(db.String(128))
+    login = db.Column(db.String(128))
 
     @property
     def commit(self) -> Order:
         db.session.add(self)
         db.session.commit()
         return self
+
+    @staticmethod
+    def all(login) -> List[Order]:
+        return Order.query.filter_by(login=login).all()

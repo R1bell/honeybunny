@@ -44,5 +44,5 @@ class User(db.Model):
         return self
 
     @staticmethod
-    def log_in(login: str, password: str) -> bool:
+    def log_in(login: str, password: str) -> User:
         return User.query.filter_by(login=login, password=password).first()
