@@ -2,7 +2,7 @@ from flask_jwt_extended import create_access_token
 from flask_restplus import Resource
 
 from app.api.auth.models import auth_response_model, login_model, \
-    registration_model
+    registration_model, login_response_model
 from app.api.auth.namespace import AUTH_NAMESPACE as api
 from app.api.responses import get_codes
 from app.models.user import User
@@ -24,7 +24,7 @@ class Auth(Resource):
         identity: str = api.payload["login"]
         return {
             "accessToken": create_access_token(identity=identity),
-            "userId": user_id,
+            "id": user_id,
             "firstName": api.payload["firstName"],
             "lastName": api.payload["lastName"]
         }
@@ -32,9 +32,13 @@ class Auth(Resource):
 
 @api.route('/sign-in')
 class Login(Resource):
+    @api.marshal_with(login_response_model)
     @api.expect(login_model, validate=True)
-    @api.doc(responses=get_codes(200, 401))
+    @api.doc(responses=get_codes(401))
     def post(self):
-        if User.log_in(**api.payload):
-            return create_access_token(identity=api.payload["login"])
-        api.abort(401, "Wrong email or password.")
+        user = User.log_in(**api.payload)
+        print(user)
+        return {
+            "user": user,
+            "accessToken": create_access_token(identity=api.payload["login"])
+        } if user else api.abort(401, "Wrong email or password.")

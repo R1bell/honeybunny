@@ -45,7 +45,4 @@ class User(db.Model):
 
     @staticmethod
     def log_in(login: str, password: str) -> bool:
-        return db.session\
-            .query(User.id)\
-            .filter_by(login=login, password=password)\
-            .scalar() is not None
+        return User.query.filter_by(login=login, password=password).first()
