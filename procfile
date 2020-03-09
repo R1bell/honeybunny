@@ -1,1 +1,1 @@
-web: gunicorn manage.py run
+web: flask db upgrade; gunicorn manage:app
