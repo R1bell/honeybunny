@@ -1,1 +1,2 @@
-web: python manage.py run
+web: gunicorn manage.py run
+heroku ps:scale web=1
