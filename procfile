@@ -1,1 +1,1 @@
-web: python manage.py db upgrade; python manage.py run
+web: python manage.py run
