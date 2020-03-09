@@ -26,18 +26,17 @@ class Buskets(Resource):
         return "success" if Busket(**api.payload).commit else api.abort(409)
 
     @jwt_required
-    @api.doc(response=get_codes(200), security="apiKey", params=auth)
+    @api.doc(response=get_codes(200, 401), security="apiKey", params=auth)
     def delete(self):
-        user_login = get_jwt_identity()
-        user_id = User.query.filter_by(login=user_login).first().id
-        Busket.delete_all(user_id)
+        Busket.delete_all(
+            User.query.filter_by(login=get_jwt_identity()).first().id)
         return "success"
 
 
 @api.route("/<item_id>")
 class BusketsByItemId(Resource):
     @api.expect(item_amount, validate=True)
-    @api.doc(responses=get_codes(200, 404), security="apiKey", params=auth)
+    @api.doc(responses=get_codes(200, 401, 404), security="apiKey", params=auth)
     @jwt_required
     def put(self, item_id):
         item: Optional[Busket] = Busket.query.filter_by(id=item_id).first()

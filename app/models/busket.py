@@ -16,9 +16,6 @@ class Busket(db.Model):
     good_id = db.Column(db.Integer, db.ForeignKey("Good.id"))
     amount = db.Column(db.Integer)
 
-    def __repr__(self):
-        return "user - {}\ngood - {}\namount - {}"
-
     @property
     def commit(self) -> bool:
         db.session.add(self)
@@ -44,7 +41,8 @@ class Busket(db.Model):
     @staticmethod
     def delete_all(user_id: int) -> bool:
         try:
-            Busket.query.filter_by(user_id=user_id).delete()
+            db.session.query(Busket).filter_by(user_id=user_id).delete()
+            db.session.commit()
             return True
         except UnmappedInstanceError:
             return False
