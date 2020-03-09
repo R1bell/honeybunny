@@ -7,6 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
+from os import environ as env
 
 from app.admin import create_admin
 from app.app import create_app
@@ -27,7 +28,7 @@ admin: Admin = create_admin(app)
 @manager.command
 def run():
     system('python manage.py db upgrade')
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=int(env.get("PORT", 5000)))
 
 
 if __name__ == '__main__':
