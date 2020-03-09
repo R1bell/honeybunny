@@ -15,6 +15,8 @@ from app.db import create_db
 from app.jwt import create_jwt
 from app.models import Busket, Category, Good, User, Order
 
+PORT = int(env.get("PORT", 5000))
+
 app: Flask = create_app()
 CORS(app)
 db: SQLAlchemy = create_db(app)
@@ -28,7 +30,7 @@ admin: Admin = create_admin(app)
 @manager.command
 def run():
     system('python manage.py db upgrade')
-    app.run(debug=True, host="0.0.0.0", port=int(env.get("PORT", 5000)))
+    app.run(debug=True, host="0.0.0.0", port=PORT)
 
 
 if __name__ == '__main__':
