@@ -16,6 +16,7 @@ class Good(db.Model):
     description = db.Column(db.Text)
     measure = db.Column(db.String(64))
     price = db.Column(db.Float)
+    category_id = db.Column(db.Integer, db.ForeignKey("Category.id"))
     user_id = db.relationship(
         "Busket",
         backref="good",
@@ -23,7 +24,6 @@ class Good(db.Model):
         foreign_keys="Busket.good_id",
         cascade="all, delete-orphan"
     )
-    category_id = db.Column(db.Integer, db.ForeignKey("Category.id"))
 
     def __repr__(self) -> str:
         return self.name

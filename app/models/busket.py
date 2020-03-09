@@ -33,10 +33,18 @@ class Busket(db.Model):
         db.session.commit()
 
     @staticmethod
-    def delete(id):
+    def delete(id: int) -> bool:
         try:
             db.session.delete(Busket.query.filter_by(id=id).first())
             db.session.commit()
+            return True
+        except UnmappedInstanceError:
+            return False
+
+    @staticmethod
+    def delete_all(user_id: int) -> bool:
+        try:
+            Busket.query.filter_by(user_id=user_id).delete()
             return True
         except UnmappedInstanceError:
             return False

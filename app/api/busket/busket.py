@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restplus import Resource
 
 from app.api.busket.models import item_amount, item_model, item_with_good
 from app.api.busket.namespace import BUSKET_NAMESPACE as api
 from app.api.responses import get_codes
 from app.db import DB as db
-from app.models import Busket, Good, User
+from app.models import Busket, User
 
 auth = {
     "Authorization": {
@@ -24,6 +24,14 @@ class Buskets(Resource):
     @jwt_required
     def post(self):
         return "success" if Busket(**api.payload).commit else api.abort(409)
+
+    @jwt_required
+    @api.doc(response=get_codes(200), security="apiKey", params=auth)
+    def delete(self):
+        user_login = get_jwt_identity()
+        user_id = User.query.filter_by(login=user_login).first().id
+        Busket.delete_all(user_id)
+        return "success"
 
 
 @api.route("/<item_id>")
