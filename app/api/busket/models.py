@@ -19,6 +19,7 @@ good_model: Model = api.model("good", {
     "description": fields.String,
     "measure": fields.String,
     "price": fields.Float,
+    "link": fields.String,
     "category": fields.String
 })
 

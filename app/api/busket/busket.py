@@ -65,7 +65,8 @@ class BusketsByUserId(Resource):
                 "description": good[5],
                 "measure": good[6],
                 "price": good[7],
-                "category": good[8]
+                "link": good[8],
+                "category": good[9]
             }
         } for good in db.session.execute(
             """SELECT
@@ -77,6 +78,7 @@ class BusketsByUserId(Resource):
                 "Good".description as description,
                 "Good".measure as measure,
                 "Good".price as price,
+                "Good".link as link
                 "Category".name as category
             FROM "Busket"
             JOIN "Good" ON "Busket".good_id="Good".id

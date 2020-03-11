@@ -17,6 +17,7 @@ class Good(db.Model):
     measure = db.Column(db.String(64))
     price = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey("Category.id"))
+    link = db.Column(db.text)
     user_id = db.relationship(
         "Busket",
         backref="good",
