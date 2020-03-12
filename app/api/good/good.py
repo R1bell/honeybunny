@@ -28,14 +28,6 @@ class Goods(Resource):
         return "success" if good.commit() else api.abort(409)
 
 
-@api.route("/<category>")
-class GoodsByCategory(Resource):
-    @api.marshal_list_with(good_with_id, mask=None)
-    @api.doc(responses=get_codes(200))
-    def get(self, category: str):
-        return Category.get_all_goods(category)
-
-
 @api.route("/<id>")
 @api.doc(params={"id": "id"})
 class GoodsById(Resource):
@@ -55,3 +47,11 @@ class GoodsById(Resource):
     def get(self, id: int):
         good: Optional[Good] = Good.first(id=id)
         return good if good else api.abort(404)
+
+
+@api.route("/category/<category>")
+class GoodsByCategory(Resource):
+    @api.marshal_list_with(good_with_id, mask=None)
+    @api.doc(responses=get_codes(200))
+    def get(self, category: str):
+        return Category.get_all_goods(category)

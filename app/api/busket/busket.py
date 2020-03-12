@@ -83,4 +83,5 @@ class BusketsByUserId(Resource):
             FROM "Busket"
             JOIN "Good" ON "Busket".good_id="Good".id
             JOIN "Category" ON "Good".category_id="Category".id
-            WHERE "Busket".user_id={}""".format(user_id))]
+            WHERE "Busket".user_id={}
+            ORDER BY item_id""".format(user_id))]

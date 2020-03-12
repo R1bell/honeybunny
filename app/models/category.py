@@ -28,7 +28,8 @@ class Category(db.Model):
 
     @staticmethod
     def get_all_goods(category_name: str) -> List[Good]:
-        return Category.query.filter_by(name=category_name).first().goods.all()
+        goods = Category.query.filter_by(name=category_name).first()
+        return goods.goods.all() if goods else []
 
     @staticmethod
     def all() -> List[Category]:
