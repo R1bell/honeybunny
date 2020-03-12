@@ -78,7 +78,7 @@ class BusketsByUserId(Resource):
                 "Good".description as description,
                 "Good".measure as measure,
                 "Good".price as price,
-                "Good".link as link
+                "Good".link as link,
                 "Category".name as category
             FROM "Busket"
             JOIN "Good" ON "Busket".good_id="Good".id
