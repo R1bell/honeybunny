@@ -38,8 +38,6 @@ def run():
 
 @app.route("/")
 def send():
-    from flask_mail import Message
-    mail.send(Message("test", recipients=["sanamyanraf@mail.ru"], body="test message"))
     return "sent"
 
 
