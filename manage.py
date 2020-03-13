@@ -33,7 +33,7 @@ mail: Mail = create_mail(app)
 @manager.command
 def run():
     system('python manage.py db upgrade')
-    app.run(port=PORT)
+    app.run(debug=True, host="0.0.0.0", port=PORT)
 
 
 @app.route("/")
