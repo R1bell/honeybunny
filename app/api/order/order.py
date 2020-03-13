@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from flask_mail import Message
 from flask_restplus import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -22,10 +24,10 @@ class Orders(Resource):
     @api.expect(new_order, validate=True)
     @api.doc(responses=get_codes(200), security="apiKey", params=auth)
     def post(self):
-        order = Order(**api.payload, login=get_jwt_identity()).commit
-        recipients = api.payload.get("email")
-        body = "Заказ №{} принят в обработку".format(order.id)
-        msg = Message("Заказ в HoneyBunny", recipients=recipients, body=body)
+        order: Order = Order(**api.payload, login=get_jwt_identity()).commit
+        recipients: Tuple[str] = (api.payload.get("email"),)
+        body: str = "Заказ №{} принят в обработку".format(order.id)
+        msg: Message = Message("Заказ в HoneyBunny", recipients=recipients, body=body)
         mail.send(msg)
         return order
 
