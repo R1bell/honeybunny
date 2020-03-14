@@ -28,7 +28,10 @@ class Orders(Resource):
         try:
             recipients: List[str] = (api.payload.get("email"),)
             body: str = "Заказ №{} принят в обработку".format(order.id)
-            msg: Message = Message("Заказ в HoneyBunny", recipients=recipients, body=body)
+            msg: Message = Message(
+                "Заказ в HoneyBunny",
+                recipients=recipients,
+                body=body)
             mail.send(msg)
         except Exception:
             return order

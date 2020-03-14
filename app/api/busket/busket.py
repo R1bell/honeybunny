@@ -10,9 +10,12 @@ from app.api.responses import get_codes
 from app.db import DB as db
 from app.models import Busket, User
 
-auth = {
-    "Authorization": {
-        "in": "header"
+security = {
+    "security": "apiKey",
+    "params": {
+        "Authorization": {
+            "in": "header"
+        }
     }
 }
 
@@ -20,13 +23,13 @@ auth = {
 @api.route("/")
 class Buskets(Resource):
     @api.expect(item_model, validate=True)
-    @api.doc(responses=get_codes(200, 401, 409), security="apiKey", params=auth)
+    @api.doc(responses=get_codes(200, 401, 409), **security)
     @jwt_required
     def post(self):
         return "success" if Busket(**api.payload).commit else api.abort(409)
 
     @jwt_required
-    @api.doc(response=get_codes(200, 401), security="apiKey", params=auth)
+    @api.doc(response=get_codes(200, 401), **security)
     def delete(self):
         Busket.delete_all(
             User.query.filter_by(login=get_jwt_identity()).first().id)
@@ -36,7 +39,7 @@ class Buskets(Resource):
 @api.route("/<item_id>")
 class BusketsByItemId(Resource):
     @api.expect(item_amount, validate=True)
-    @api.doc(responses=get_codes(200, 401, 404), security="apiKey", params=auth)
+    @api.doc(responses=get_codes(200, 401, 404), **security)
     @jwt_required
     def put(self, item_id):
         item: Optional[Busket] = Busket.query.filter_by(id=item_id).first()
@@ -45,7 +48,7 @@ class BusketsByItemId(Resource):
             return "success"
         api.abort(404)
 
-    @api.doc(responses=get_codes(200, 404), security="apiKey", params=auth)
+    @api.doc(responses=get_codes(200, 404), **security)
     def delete(self, item_id):
         return "success" if Busket.delete(id=item_id) else api.abort(404)
 
@@ -53,7 +56,7 @@ class BusketsByItemId(Resource):
 @api.route("/<user_id>")
 class BusketsByUserId(Resource):
     @api.marshal_list_with(item_with_good, mask=None)
-    @api.doc(responses=get_codes(404), security="apiKey", params=auth)
+    @api.doc(responses=get_codes(404), **security)
     def get(self, user_id: str):
         return [{
             "id": good[0],
