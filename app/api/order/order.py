@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import List
 
 from flask_mail import Message
 from flask_restplus import Resource
@@ -25,10 +25,13 @@ class Orders(Resource):
     @api.doc(responses=get_codes(200), security="apiKey", params=auth)
     def post(self):
         order: Order = Order(**api.payload, login=get_jwt_identity()).commit
-        recipients: Tuple[str] = (api.payload.get("email"),)
-        body: str = "Заказ №{} принят в обработку".format(order.id)
-        msg: Message = Message("Заказ в HoneyBunny", recipients=recipients, body=body)
-        mail.send(msg)
+        try:
+            recipients: List[str] = (api.payload.get("email"),)
+            body: str = "Заказ №{} принят в обработку".format(order.id)
+            msg: Message = Message("Заказ в HoneyBunny", recipients=recipients, body=body)
+            mail.send(msg)
+        except Exception:
+            return order
         return order
 
     @jwt_required
