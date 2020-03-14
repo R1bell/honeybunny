@@ -36,12 +36,5 @@ def run():
     app.run(debug=True, host="0.0.0.0", port=PORT)
 
 
-@app.route("/")
-def send():
-    from flask_mail import Message
-    mail.send(Message("test", recipients=["sanamyanraf@mail.ru"], body="test message"))
-    return "sent"
-
-
 if __name__ == '__main__':
     manager.run()

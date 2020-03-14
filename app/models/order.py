@@ -16,7 +16,7 @@ class Order(db.Model):
     porch = db.Column(db.String(128))
     floor = db.Column(db.String(128))
     apartment = db.Column(db.String(128))
-    comment = db.Column(db.String(128))
+    comment = db.Column(db.Text)
     firstName = db.Column(db.String(128))
     lastName = db.Column(db.String(128))
     phone = db.Column(db.String(128))
