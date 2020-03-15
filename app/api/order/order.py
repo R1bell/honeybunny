@@ -26,7 +26,7 @@ class Orders(Resource):
     def post(self):
         order: Order = Order(**api.payload, login=get_jwt_identity()).commit
         try:
-            recipients: List[str] = (api.payload.get("email"),)
+            recipients: List[str] = [api.payload.get("email")]
             body: str = "Заказ №{} принят в обработку".format(order.id)
             msg: Message = Message(
                 "Заказ в HoneyBunny",
