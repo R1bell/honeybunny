@@ -35,7 +35,7 @@ class Orders(Resource):
             mail.send(msg)
         except Exception as err:
             import logging
-            logging.error(f"payload - {**api.payload}")
+            logging.error(f"payload - {str(api.payload)}")
             logging.error(f"error - {str(err)}")
             return order
         return order
