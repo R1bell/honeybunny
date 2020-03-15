@@ -1,4 +1,5 @@
 from typing import List
+from datetime import date
 
 from flask_mail import Message
 from flask_restplus import Resource
@@ -16,6 +17,16 @@ auth = {
     }
 }
 
+body_template = """
+Здравствуйте, {firstName}!
+Благодарим вас за покупку в нашем магазине.
+________________________________________________
+идентификатор заказа: {id}
+дата заказа: {date}
+________________________________________________
+all right reserved
+"""
+
 
 @api.route("/")
 class Orders(Resource):
@@ -25,19 +36,18 @@ class Orders(Resource):
     @api.doc(responses=get_codes(200), security="apiKey", params=auth)
     def post(self):
         order: Order = Order(**api.payload, login=get_jwt_identity()).commit
-        try:
-            recipients: List[str] = [api.payload.get("email")]
-            body: str = "Заказ №{} принят в обработку".format(order.id)
-            msg: Message = Message(
-                "Заказ в HoneyBunny",
-                recipients=recipients,
-                body=body)
-            mail.send(msg)
-        except Exception as err:
-            import logging
-            logging.error(f"payload - {str(api.payload)}")
-            logging.error(f"error - {str(err)}")
-            return order
+        recipients: List[str] = [api.payload.get("email")]
+        body: str = body_template.format(
+            firstName=order.firstName,
+            id=order.id,
+            date=date.today().strftime("%d %B %Y")
+            )
+        msg: Message = Message(
+            "HoneyBunny заказ №{}".format(order.id),
+            recipients=recipients,
+            body=body
+        )
+        mail.send(msg)
         return order
 
     @jwt_required
