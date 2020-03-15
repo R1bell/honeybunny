@@ -23,6 +23,7 @@ body_template = """
 ________________________________________________
 идентификатор заказа: {id}
 дата заказа: {date}
+сумма заказа: {order_amount}
 ________________________________________________
 all right reserved
 """
@@ -40,7 +41,8 @@ class Orders(Resource):
         body: str = body_template.format(
             firstName=order.firstName,
             id=order.id,
-            date=date.today().strftime("%d %B %Y")
+            date=date.today().strftime("%d %B %Y"),
+            order_amount=order.comment.split()[-1]
             )
         msg: Message = Message(
             "HoneyBunny заказ №{}".format(order.id),
