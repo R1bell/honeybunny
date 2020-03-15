@@ -33,7 +33,10 @@ class Orders(Resource):
                 recipients=recipients,
                 body=body)
             mail.send(msg)
-        except Exception:
+        except Exception as err:
+            import logging
+            logging.error(f"payload - {**api.payload}")
+            logging.error(f"error - {str(err)}")
             return order
         return order
 
